@@ -1,0 +1,7 @@
+{
+  "endOfLine": "lf",
+  "trailingComma": "all",
+  "arrowParens": "avoid",
+  "printWidth": 80,
+  "importOrderSeparation": true
+}
