@@ -1,5 +1,7 @@
 import { type FC, useState } from "react";
 
+import Keypad from "@components/keypad";
+
 const EMPTY_ROW = ["", "", "", "", "", ""];
 const MAX_ATTEMPTS = 6;
 
@@ -32,8 +34,8 @@ const Board: FC = () => {
 
   const cellStyle = (character: string, index: number, rowIndex: number) => {
     console.log("fill row: ", rowIndex, attempts);
-    if (rowIndex >= attempts) return "text-gray-700 bg-gray-200";
-    if (!character) return "bg-gray-200";
+    if (rowIndex >= attempts) return "text-gray-700 bg-tile";
+    if (!character) return "bg-tile";
 
     if (character === solution[index]) {
       return "bg-green-500";
@@ -51,13 +53,12 @@ const Board: FC = () => {
           {row.map((cell: string, cellIdx: number) => (
             <div
               key={cellIdx}
-              className={`flex items-center justify-center w-12 h-12 rounded-lg my-1 font-bold 
+              className={`flex items-center justify-center w-12 h-12 rounded-lg my-1 font-bold shadow-md
                 ${cellStyle(
                   idx === attempts ? currentGuess[cellIdx] : cell,
                   cellIdx,
                   idx,
                 )}
-                ${idx === attempts ? "border-gray-400" : "border-gray-200"}
               `}
             >
               {idx === attempts ? currentGuess[cellIdx] : cell}
@@ -66,7 +67,7 @@ const Board: FC = () => {
         </div>
       ))}
       <div className="flex flex-col items-center mt-4">
-        <button onClick={() => setCurrentGuess("48+5-2")}>test guess</button>
+        <Keypad onKeyPress={key => setCurrentGuess(prev => prev + key)} />
         <button onClick={submit}>submit guess</button>
       </div>
     </div>
