@@ -5,5 +5,7 @@ export default {
 		"\\.(gif|ttf|eot|svg|png)$": "<rootDir>/test/__mocks__/fileMock.js",
 		"\\.(css|less|sass|scss)$": "identity-obj-proxy",
 		"^@/(.*)$": "<rootDir>/src/$1",
+		"^@components/(.*)$": "<rootDir>/src/components/$1",
+		"^@context/(.*)$": "<rootDir>/src/context/$1",
 	},
 };
