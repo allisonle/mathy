@@ -42,12 +42,14 @@ const Keypad: FC<Props> = ({
       </div>
       <div className="flex gap-2">
         <button
+          data-testid="backspace-key"
           className="flex items-center justify-center w-[120px] h-12 cursor-pointer text-black bg-white rounded-lg"
           onClick={onBackspace}
         >
           <MoveLeft size={16} />
         </button>
         <button
+          data-testid="submit-key"
           className="flex items-center justify-center w-[120px] h-12 cursor-pointer text-black bg-button rounded-lg"
           onClick={onSubmit}
         >
