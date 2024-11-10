@@ -1,4 +1,4 @@
-import React, {
+import {
   FC,
   PropsWithChildren,
   createContext,
@@ -8,7 +8,7 @@ import React, {
   useState,
 } from "react";
 
-import { getDailyTimestamp, generateExpressions } from "@/lib/gameUtils";
+import { getDailyTimestamp, generateExpression } from "@/lib/gameUtils";
 
 type GameContextType = string;
 
@@ -27,7 +27,7 @@ const GameProvider: FC<PropsWithChildren> = ({ children }) => {
     console.log("existing puzzle: ", todaysPuzzle);
 
     if (!todaysPuzzle) {
-      const newPuzzle = generateExpressions();
+      const newPuzzle = generateExpression();
       console.log("new puzzle: ", newPuzzle);
       setGame(newPuzzle);
       window.localStorage.setItem(

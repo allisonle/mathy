@@ -31,7 +31,7 @@ const getRandomOperator = (includeMult?: boolean) => {
   return operatorList[Math.floor(rand * operatorList.length)];
 };
 
-export const generateExpressions = () => {
+export const generateExpression = () => {
   const rand = Math.random();
 
   const { twoDigits, threeDigits } = getPotentialOperands();
