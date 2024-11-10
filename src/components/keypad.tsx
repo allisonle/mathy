@@ -1,6 +1,8 @@
 import { type FC, useState } from "react";
 import { CornerDownLeft, MoveLeft } from "lucide-react";
 
+import { KEY_CHARS } from "@context/constants";
+
 interface Props {
   onBackspace: () => void;
   onKeyPress: (key: string) => void;
@@ -8,27 +10,10 @@ interface Props {
 }
 
 const Keypad: FC<Props> = ({ onBackspace, onKeyPress, onSubmit }) => {
-  const [keys, setKeys] = useState([
-    "1",
-    "2",
-    "3",
-    "4",
-    "5",
-    "6",
-    "7",
-    "8",
-    "9",
-    "0",
-    "+",
-    "-",
-    "*",
-    "/",
-  ]);
-
   return (
     <div className="flex flex-col gap-4 items-center">
       <div className="w-1/2 flex flex-wrap gap-1">
-        {keys.map(key => (
+        {KEY_CHARS.map(key => (
           <button
             key={key}
             className="w-12 h-12 cursor-pointer text-black bg-white rounded-lg box-border border-2 border-gray-400"

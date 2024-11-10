@@ -1,17 +1,36 @@
-import { type FC, useState } from "react";
+import { type FC, useEffect, useState } from "react";
 
 import Keypad from "@components/keypad";
 
-const EMPTY_ROW = ["", "", "", "", "", ""];
-const MAX_ATTEMPTS = 6;
+import { EXPR_LENGTH, KEY_CHARS, MAX_ATTEMPTS } from "@context/constants";
 
 const Board: FC = () => {
   const solution = "12*4+3";
   const [boardState, setBoardState] = useState(
-    Array(MAX_ATTEMPTS).fill(EMPTY_ROW),
+    Array(MAX_ATTEMPTS).fill(Array(EXPR_LENGTH).fill("")),
   );
   const [attempts, setAttempts] = useState(0);
   const [currentGuess, setCurrentGuess] = useState("");
+
+  useEffect(() => {
+    window.addEventListener("keydown", onKeyPress);
+    return () => window.removeEventListener("keydown", onKeyPress);
+  });
+
+  const handleBackspace = () => {
+    setCurrentGuess(prev => prev.slice(0, prev.length - 1));
+  };
+
+  const handleInputChar = (key: string) => {
+    setCurrentGuess(prev => prev + key);
+  };
+
+  const onKeyPress = (event: KeyboardEvent) => {
+    const { key } = event;
+    if (key === "Enter") submit();
+    else if (key === "Backspace") handleBackspace();
+    else if (KEY_CHARS.includes(key)) handleInputChar(key);
+  };
 
   const submit = () => {
     if (currentGuess.length < 6) return;
@@ -69,10 +88,8 @@ const Board: FC = () => {
       ))}
       <div className="flex flex-col items-center mt-4">
         <Keypad
-          onBackspace={() =>
-            setCurrentGuess(prev => prev.slice(0, prev.length - 1))
-          }
-          onKeyPress={key => setCurrentGuess(prev => prev + key)}
+          onBackspace={handleBackspace}
+          onKeyPress={key => handleInputChar(key)}
           onSubmit={submit}
         />
       </div>
