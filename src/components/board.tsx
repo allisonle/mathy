@@ -7,6 +7,7 @@ import { EXPR_LENGTH, KEY_CHARS, MAX_ATTEMPTS } from "@context/constants";
 import { useGame } from "@context/game-provider";
 import { type TGameState } from "@context/types";
 
+import { triggerToast } from "@/helpers/toast";
 import { commutativeCheck, judge } from "@/lib/utils";
 
 const Board: FC = () => {
@@ -18,8 +19,10 @@ const Board: FC = () => {
     Array(MAX_ATTEMPTS).fill(Array(EXPR_LENGTH).fill("")),
   );
   const [currentGuess, setCurrentGuess] = useState<string>("");
-  const [errorMsg, setErrorMsg] = useState<string>("");
   const [gameState, setGameState] = useState<TGameState>("pending");
+  const [guessedChars, setGuessedChars] = useState<string[]>([]);
+  const [greenTiles, setGreenTiles] = useState<string[]>([]);
+  const [yellowTiles, setYellowTiles] = useState<string[]>([]);
 
   useEffect(() => {
     window.addEventListener("keydown", onKeyPress);
@@ -43,14 +46,14 @@ const Board: FC = () => {
 
   const validateSubmission = () => {
     if (currentGuess.length < EXPR_LENGTH) {
-      setErrorMsg("Expression must be 6 characters long");
+      triggerToast("Expression must be 6 characters long", "error");
       return false;
     }
 
     const result = judge(currentGuess);
 
     if (result !== ans) {
-      setErrorMsg(`Expression must equal ${ans}`);
+      triggerToast("Expression must equal " + ans, "error");
       return false;
     }
 
@@ -60,6 +63,17 @@ const Board: FC = () => {
   const submit = () => {
     if (!validateSubmission()) return;
     const updatedBoard = boardState.map((row, index) => {
+      const greens = currentGuess
+        .split("")
+        .filter((char, idx) => char === solution[idx]);
+      const yellows = currentGuess
+        .split("")
+        .filter(char => solution.includes(char) && !greens.includes(char));
+
+      setGreenTiles(prev => [...prev, ...greens]);
+      setYellowTiles(prev => [...prev, ...yellows]);
+      setGuessedChars(prev => [...prev, ...currentGuess.split("")]);
+
       if (index === attempts) {
         return currentGuess.split("");
       }
@@ -69,13 +83,13 @@ const Board: FC = () => {
 
     if (currentGuess === solution || commutativeCheck(currentGuess, solution)) {
       setGameState("success");
-      setErrorMsg("");
+      triggerToast("Congratulations! You have solved the puzzle!");
     } else if (attempts === MAX_ATTEMPTS - 1) {
+      triggerToast("You have run out of attempts :(", "warning");
       setGameState("failure");
     } else {
       setAttempts(prev => prev + 1);
       setCurrentGuess("");
-      setErrorMsg("");
     }
   };
 
@@ -126,9 +140,11 @@ const Board: FC = () => {
           onBackspace={handleBackspace}
           onKeyPress={key => handleInputChar(key)}
           onSubmit={submit}
+          guessedChars={guessedChars}
+          greenTiles={greenTiles}
+          yellowTiles={yellowTiles}
         />
       </div>
-      {errorMsg && <p className="text-red-500">{errorMsg}</p>}
     </div>
   );
 };

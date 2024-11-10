@@ -7,16 +7,33 @@ interface Props {
   onBackspace: () => void;
   onKeyPress: (key: string) => void;
   onSubmit: () => void;
+  guessedChars: string[];
+  greenTiles: string[];
+  yellowTiles: string[];
 }
 
-const Keypad: FC<Props> = ({ onBackspace, onKeyPress, onSubmit }) => {
+const Keypad: FC<Props> = ({
+  onBackspace,
+  onKeyPress,
+  onSubmit,
+  guessedChars,
+  greenTiles,
+  yellowTiles,
+}) => {
+  const getKeyColor = (key: string) => {
+    if (greenTiles.includes(key)) return "bg-green-400";
+    if (yellowTiles.includes(key)) return "bg-yellow-400";
+    if (guessedChars.includes(key)) return "bg-gray-400";
+    return "bg-white";
+  };
+
   return (
     <div className="flex flex-col gap-4 items-center">
       <div className="w-1/2 flex flex-wrap gap-1">
         {KEY_CHARS.map(key => (
           <button
             key={key}
-            className="w-12 h-12 cursor-pointer font-semibold text-black bg-white rounded-lg box-border border-2 border-border"
+            className={`w-12 h-12 cursor-pointer font-semibold text-black rounded-lg box-border border-2 border-border ${getKeyColor(key)}`}
             onClick={() => onKeyPress(key)}
           >
             {key}
