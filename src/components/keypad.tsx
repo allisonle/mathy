@@ -1,4 +1,4 @@
-import { type FC, useState } from "react";
+import { type FC } from "react";
 import { CornerDownLeft, MoveLeft } from "lucide-react";
 
 import { KEY_CHARS } from "@context/constants";
