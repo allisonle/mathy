@@ -3,14 +3,21 @@ import { type FC, useEffect, useState } from "react";
 import Keypad from "@components/keypad";
 
 import { EXPR_LENGTH, KEY_CHARS, MAX_ATTEMPTS } from "@context/constants";
+import { type TGameState } from "@context/types";
+
+import { judge, sortExpression } from "@/lib/utils";
 
 const Board: FC = () => {
   const solution = "12*4+3";
-  const [boardState, setBoardState] = useState(
+  const ans = judge(solution);
+
+  const [attempts, setAttempts] = useState<number>(0);
+  const [boardState, setBoardState] = useState<Array<Array<string>>>(
     Array(MAX_ATTEMPTS).fill(Array(EXPR_LENGTH).fill("")),
   );
-  const [attempts, setAttempts] = useState(0);
-  const [currentGuess, setCurrentGuess] = useState("");
+  const [currentGuess, setCurrentGuess] = useState<string>("");
+  const [errorMsg, setErrorMsg] = useState<string>("");
+  const [gameState, setGameState] = useState<TGameState>("pending");
 
   useEffect(() => {
     window.addEventListener("keydown", onKeyPress);
@@ -32,8 +39,24 @@ const Board: FC = () => {
     else if (KEY_CHARS.includes(key)) handleInputChar(key);
   };
 
+  const validateSubmission = () => {
+    if (currentGuess.length < EXPR_LENGTH) {
+      setErrorMsg("Expression must be 6 characters long");
+      return false;
+    }
+
+    const result = judge(currentGuess);
+
+    if (result !== ans) {
+      setErrorMsg(`Expression must equal ${ans}`);
+      return false;
+    }
+
+    return true;
+  };
+
   const submit = () => {
-    if (currentGuess.length < 6) return;
+    if (!validateSubmission()) return;
     const updatedBoard = boardState.map((row, index) => {
       if (index === attempts) {
         return currentGuess.split("");
@@ -42,19 +65,26 @@ const Board: FC = () => {
     });
     setBoardState(updatedBoard);
 
-    if (currentGuess === solution) {
-      console.log("yay");
+    if (
+      currentGuess === solution ||
+      (sortExpression(currentGuess) === sortExpression(solution) &&
+        judge(currentGuess) === ans)
+    ) {
+      setGameState("success");
+      setErrorMsg("");
     } else if (attempts === MAX_ATTEMPTS - 1) {
-      console.log("boo");
+      setGameState("failure");
     } else {
       setAttempts(prev => prev + 1);
       setCurrentGuess("");
+      setErrorMsg("");
     }
   };
 
   const cellStyle = (character: string, index: number, rowIndex: number) => {
-    console.log("fill row: ", rowIndex, attempts);
-    if (rowIndex >= attempts) return "text-gray-700 bg-tile";
+    if (gameState === "pending" && rowIndex >= attempts)
+      return "text-gray-700 bg-tile";
+    if (gameState === "success" && rowIndex === attempts) return "bg-green-500";
     if (!character) return "bg-tile";
 
     if (character === solution[index]) {
@@ -67,25 +97,31 @@ const Board: FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center">
-      {boardState.map((row, idx) => (
-        <div key={idx} className="flex gap-2">
-          {row.map((cell: string, cellIdx: number) => (
-            <div
-              key={cellIdx}
-              className={`flex items-center justify-center w-12 h-12 rounded-lg my-1 font-bold shadow-md
-                ${cellStyle(
-                  idx === attempts ? currentGuess[cellIdx] : cell,
-                  cellIdx,
-                  idx,
-                )}
-              `}
-            >
-              {idx === attempts ? currentGuess[cellIdx] : cell}
-            </div>
-          ))}
-        </div>
-      ))}
+    <div className="flex flex-col items-center gap-4">
+      <h2 className="text-xl font-medium">
+        Find the expression that equals {ans}
+      </h2>
+      <div className="flex flex-col items-center">
+        {boardState.map((row, idx) => (
+          <div key={idx} className="flex gap-2">
+            {row.map((cell: string, cellIdx: number) => (
+              <div
+                key={cellIdx}
+                className={`flex items-center justify-center w-12 h-12 rounded-lg my-1 font-bold shadow-md box-border
+                  ${cellStyle(
+                    idx === attempts ? currentGuess[cellIdx] : cell,
+                    cellIdx,
+                    idx,
+                  )}
+                  ${gameState === "pending" && idx === attempts ? "border-2 border-white" : ""}
+                `}
+              >
+                {idx === attempts ? currentGuess[cellIdx] : cell}
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
       <div className="flex flex-col items-center mt-4">
         <Keypad
           onBackspace={handleBackspace}
@@ -93,6 +129,7 @@ const Board: FC = () => {
           onSubmit={submit}
         />
       </div>
+      {errorMsg && <p className="text-red-500">{errorMsg}</p>}
     </div>
   );
 };
