@@ -1,5 +1,6 @@
 import { type FC, useEffect, useMemo, useState } from "react";
 
+import Confetti from "@components/confetti";
 import Keypad from "@components/keypad";
 
 import { EXPR_LENGTH, KEY_CHARS, MAX_ATTEMPTS } from "@context/constants";
@@ -94,6 +95,7 @@ const Board: FC = () => {
 
   return (
     <div className="flex flex-col items-center gap-4">
+      {gameState === "success" && <Confetti />}
       <h2 className="text-xl font-medium">
         Find the expression that equals {ans}
       </h2>
