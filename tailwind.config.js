@@ -8,6 +8,10 @@ export default {
         button: "#beb2ff",
         tile: "#e0d6f1",
       },
+      fontFamily: {
+        fredoka: ["Fredoka", "sans-serif"],
+        lexend: ["Lexend", "sans-serif"],
+      },
     },
   },
   plugins: [],

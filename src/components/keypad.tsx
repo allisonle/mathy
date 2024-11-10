@@ -16,7 +16,7 @@ const Keypad: FC<Props> = ({ onBackspace, onKeyPress, onSubmit }) => {
         {KEY_CHARS.map(key => (
           <button
             key={key}
-            className="w-12 h-12 cursor-pointer text-black bg-white rounded-lg box-border border-2 border-gray-400"
+            className="w-12 h-12 cursor-pointer font-semibold text-black bg-white rounded-lg box-border border-2 border-border"
             onClick={() => onKeyPress(key)}
           >
             {key}

@@ -1,7 +1,6 @@
-import Mexp from "math-expression-evaluator";
 import { create, all } from "mathjs";
 
-const OPERATORS = ["+", "-", "*", "/"];
+import { OPERATORS } from "@context/constants";
 
 export const getDailyTimestamp = () => {
   const now = new Date();
