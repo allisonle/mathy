@@ -29,7 +29,7 @@ const Keypad: FC<Props> = ({
 
   return (
     <div className="flex flex-col gap-4 items-center">
-      <div className="w-1/2 flex flex-wrap gap-1">
+      <div className="w-full md:w-1/2 flex flex-wrap gap-1 items-center justify-center">
         {KEY_CHARS.map(key => (
           <button
             key={key}
