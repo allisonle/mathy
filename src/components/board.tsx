@@ -14,6 +14,7 @@ const Board: FC = () => {
   const [currentGuess, setCurrentGuess] = useState("");
 
   const submit = () => {
+    if (currentGuess.length < 6) return;
     const updatedBoard = boardState.map((row, index) => {
       if (index === attempts) {
         return currentGuess.split("");
@@ -67,8 +68,13 @@ const Board: FC = () => {
         </div>
       ))}
       <div className="flex flex-col items-center mt-4">
-        <Keypad onKeyPress={key => setCurrentGuess(prev => prev + key)} />
-        <button onClick={submit}>submit guess</button>
+        <Keypad
+          onBackspace={() =>
+            setCurrentGuess(prev => prev.slice(0, prev.length - 1))
+          }
+          onKeyPress={key => setCurrentGuess(prev => prev + key)}
+          onSubmit={submit}
+        />
       </div>
     </div>
   );

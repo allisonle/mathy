@@ -4,6 +4,8 @@ export default {
   theme: {
     extend: {
       colors: {
+        border: "#a295b7",
+        button: "#beb2ff",
         tile: "#e0d6f1",
       },
     },

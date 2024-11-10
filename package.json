@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "autoprefixer": "^10.4.20",
+    "lucide-react": "^0.456.0",
     "postcss": "^8.4.47",
     "prettier": "^3.3.3",
     "react": "^18.3.1",
