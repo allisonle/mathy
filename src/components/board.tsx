@@ -83,7 +83,7 @@ const Board: FC = () => {
 
     if (currentGuess === solution || commutativeCheck(currentGuess, solution)) {
       setGameState("success");
-      triggerToast("Congratulations! You have solved the puzzle!");
+      triggerToast("You did it!");
     } else if (attempts === MAX_ATTEMPTS - 1) {
       triggerToast("You have run out of attempts :(", "warning");
       setGameState("failure");
@@ -114,7 +114,7 @@ const Board: FC = () => {
       <h2 className="text-xl font-medium">
         Find the expression that equals {ans}
       </h2>
-      <div className="flex flex-col items-center">
+      <div data-testid="board-buttons" className="flex flex-col items-center">
         {boardState.map((row, idx) => (
           <div key={idx} className="flex gap-2">
             {row.map((cell: string, cellIdx: number) => (
@@ -135,7 +135,7 @@ const Board: FC = () => {
           </div>
         ))}
       </div>
-      <div className="flex flex-col items-center mt-4">
+      <div data-testid="keypad" className="flex flex-col items-center mt-4">
         <Keypad
           onBackspace={handleBackspace}
           onKeyPress={key => handleInputChar(key)}
