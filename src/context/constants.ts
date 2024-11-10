@@ -1,7 +1,5 @@
 export const EXPR_LENGTH = 6;
 
-export const MAX_ATTEMPTS = 6;
-
 export const KEY_CHARS = [
   "1",
   "2",
@@ -18,3 +16,7 @@ export const KEY_CHARS = [
   "*",
   "/",
 ];
+
+export const MAX_ATTEMPTS = 6;
+
+export const OPERATORS = ["+", "-", "*", "/"];
