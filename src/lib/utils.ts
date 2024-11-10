@@ -1,13 +1,14 @@
-import Mexp from "math-expression-evaluator";
+import { create, all } from "mathjs";
 
-export const sortExpression = (expr: string) => {
-  return expr.split("").sort().join("");
+export const commutativeCheck = (expr1: string, expr2: string) => {
+  const math = create(all);
+  return math.symbolicEqual(expr1, expr2);
 };
 
 export const judge = (sol: string) => {
   try {
-    const mexp = new Mexp();
-    return mexp.eval(sol);
+    const math = create(all);
+    return math.evaluate(sol);
   } catch {
     return null;
   }

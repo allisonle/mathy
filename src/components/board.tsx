@@ -1,15 +1,15 @@
-import { type FC, useEffect, useState } from "react";
+import { type FC, useEffect, useMemo, useState } from "react";
 
 import Keypad from "@components/keypad";
 
 import { EXPR_LENGTH, KEY_CHARS, MAX_ATTEMPTS } from "@context/constants";
 import { type TGameState } from "@context/types";
 
-import { judge, sortExpression } from "@/lib/utils";
+import { commutativeCheck, judge } from "@/lib/utils";
 
 const Board: FC = () => {
-  const solution = "12*4+3";
-  const ans = judge(solution);
+  const solution = "12+4+5";
+  const ans = useMemo(() => judge(solution), [solution]);
 
   const [attempts, setAttempts] = useState<number>(0);
   const [boardState, setBoardState] = useState<Array<Array<string>>>(
@@ -65,11 +65,7 @@ const Board: FC = () => {
     });
     setBoardState(updatedBoard);
 
-    if (
-      currentGuess === solution ||
-      (sortExpression(currentGuess) === sortExpression(solution) &&
-        judge(currentGuess) === ans)
-    ) {
+    if (currentGuess === solution || commutativeCheck(currentGuess, solution)) {
       setGameState("success");
       setErrorMsg("");
     } else if (attempts === MAX_ATTEMPTS - 1) {
