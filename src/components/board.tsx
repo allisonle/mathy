@@ -4,12 +4,13 @@ import Confetti from "@components/confetti";
 import Keypad from "@components/keypad";
 
 import { EXPR_LENGTH, KEY_CHARS, MAX_ATTEMPTS } from "@context/constants";
+import { useGame } from "@context/game-provider";
 import { type TGameState } from "@context/types";
 
 import { commutativeCheck, judge } from "@/lib/utils";
 
 const Board: FC = () => {
-  const solution = "12+4+5";
+  const solution = useGame();
   const ans = useMemo(() => judge(solution), [solution]);
 
   const [attempts, setAttempts] = useState<number>(0);
